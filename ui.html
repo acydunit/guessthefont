@@ -348,9 +348,10 @@
       const decoys  = shuffle(GOOGLE_FONTS.filter(x => x !== correct)).slice(0, 3);
       const opts    = shuffle([ correct, ...decoys ]);
 
-      console.log(
-    `Question ${currentQuestion + 1}: word="${word}", correct="${correct}", options=[${opts.join(", ")}]`
-  );
+      const DEBUG = false;
+      if (DEBUG) {
+        console.log(`Question ${currentQuestion + 1}: word="${word}", correct="${correct}", options=[${opts.join(", ")}]`);
+      }
 
       // Wait until the correct font is fully loaded
       await ensureFontLoaded(correct);
