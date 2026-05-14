@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Guess the Font</title>
+  <!-- Load custom fonts for Entry Screen -->
+  <link href="https://fonts.googleapis.com/css2?family=Barrio&family=DM+Sans:wght@500;600&display=swap" rel="stylesheet">
+  <style>
+    /* Result Screen */
+#result-screen.card {
+  padding: 48px 24px;
+  text-align: center;
+  font-family: 'DM Sans', sans-serif;
+}
+/* Title using Barrio to match entry */
+#result-screen h1 {
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 600;
+  font-size: 24px;
+  color: var(--primary);
+  margin: 0 0 12px;
+  line-height: 1;
+}
+/* Score display */
+#result-screen #score {
+  font-size: 48px;
+  font-weight: 600;
+  color: var(--text);
+  margin: 0 0 24px;
+}
+/* Play Again button styling */
+#result-screen button {
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 600;
+  font-size: 16px;
+  color: #FFFFFF;
+  background: var(--primary);
+  width: 200px;
+  height: 45px;
+  border: none;
+  border-radius: 22.5px;
+  cursor: pointer;
+  transition: background var(--transition);
+}
+#result-screen button:hover {
+  background: #142de0;
+}
+
+    #game-screen {
+      font-family: 'DM Sans', sans-serif;
+    }
+     /* Heart icon styling */
+     #lives i {
+      font-size: 20px;
+      color: var(--danger);
+      margin-right: 4px;
+    }
+    :root {
+      --bg: #f5f7fa;
+      --card-bg: #fff;
+      --primary: #3a50ed;
+      --danger: #e63946;
+      --success: #28a745;
+      --text: #333;
+      --radius: 12px;
+      --shadow: 0 8px 24px rgba(0,0,0,0.1);
+      --transition: .3s ease;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin:0; padding:0;
+      min-height:100vh;
+      display:flex; align-items:center; justify-content:center;
+      background:var(--bg);
+      font-family: 'Segoe UI', sans-serif;
+      color:var(--text);
+    }
+    .card {
+      background: var(--card-bg);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      width:90%; max-width:380px;
+    }
+    .hidden { display:none; }
+
+    /* Entry Screen Anatomy */
+    #entry-screen.card {
+      padding:48px 24px;
+      text-align: center;
+    }
+    #entry-screen h1 {
+      margin: 0 0 12px;
+      font-family: 'Barrio', cursive;
+      font-weight: 400;
+      font-size: 32px;
+      color: #1A1A1A;
+      line-height: 1;
+      text-align: center;
+    }
+    #entry-screen p.subtitle {
+      margin: 0 0 24px;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 500;
+      font-size: 14px;
+      line-height: 20px;
+      color: #4D4D4D;
+      text-align: center;
+    }
+    #entry-screen button {
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 500;
+      font-size: 16px;
+      color: #FFFFFF;
+      background: #3a50ed;
+      width: 200px;
+      height: 45px;
+      border: none;
+      border-radius: 22.5px;
+      cursor: pointer;
+      transition: background var(--transition);
+    }
+    #entry-screen button:hover {
+      background: #142de0;
+    }
+
+    /* Game Screen Padding Override */
+    #game-screen.card {
+      padding: 16px 16px 24px;
+    }
+    .game-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; }
+    #question-count { font-weight:600; }
+    #lives { color:var(--danger); }
+    #progress-container {
+      width: 100%;
+      height: 8px;
+      background: #eee;
+      border-radius: var(--radius);
+      overflow: hidden;
+      margin-bottom: 16px;
+    }
+    #progress-bar { width:0; height:100%; background:var(--primary); transition:width var(--transition); }
+    .question-box {
+      background: #f0f2f7;
+      width: 100%;
+      height: 200px;
+      border-radius: var(--radius);
+      margin-bottom: 0px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .question-box span { font-size:2rem; font-weight:600; }
+
+    #feedback {
+      min-height: 0;
+      margin-bottom: 16px;
+      font-size: .95rem;
+      font-weight: 500;
+    }
+    .options-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+    .option {
+      padding: 12px;
+      text-align: center;
+      border: 1px solid #E6E8ED;
+      border-radius: 999px;
+      cursor: pointer;
+      transition: background var(--transition), border-color var(--transition);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 15px;
+      font-weight: 500;
+    }
+    .option:hover { background:#f0f0ff; border-color:var(--primary); }
+    .option.correct { background:#d4edda; border-color:var(--success); color:#155724; }
+    .option.wrong { background:#f8d7da; border-color:#dc3545; color:#721c24; }
+
+    /* Result Screen (unchanged) */
+    #result-screen.card { padding:24px; }
+    #result-screen h1 { margin:0 0 16px; color:var(--primary); }
+    #result-screen button { margin-top:0; }
+
+    #lives {
+      display: flex;
+      align-items: center;
+    }
+    .heart-icon {
+      width: 20px;
+      height: 20px;
+      margin-right: 4px;
+      fill: var(--danger);
+    }
+  </style>
+</head>
+<body>
+  <!-- Entry Screen -->
+  <div class="card" id="entry-screen">
+    <h1>Guess the font!</h1>
+    <p class="subtitle">Can you identify fonts by sight?<br>Let's test your typography knowledge.</p>
+    <button id="start-btn">Start Game</button>
+  </div>
+
+  <!-- Game Screen -->
+  <div class="card hidden" id="game-screen">
+    <div class="game-header">
+      <span id="question-count">01 / 10</span>
+      <span id="lives">❤︎❤︎❤︎</span>
+    </div>
+    <div id="progress-container"><div id="progress-bar"></div></div>
+    <div class="question-box" id="question"><span>Loading...</span></div>
+    <div id="feedback"></div>
+    <div id="options" class="options-grid"></div>
+  </div>
+
+  <!-- Result Screen -->
+  <div class="card hidden" id="result-screen">
+    <h1>Your Score</h1>
+    <div style="margin:16px 0;">
+      <img
+        id="result-img"
+        src=""
+        alt="Result GIF"
+        style="max-width:100%; border-radius:var(--radius);" />
+    </div>
+    <p id="score" style="font-size:1.5rem; margin:16px 0;"></p>
+    <button id="play-again-btn">Play Again</button>
+    <a href="https://ko-fi.com/rafitheartsy" target="_blank" style="display:inline-block;margin-top:12px;font-family:'DM Sans',sans-serif;font-size:13px;color:#888;text-decoration:none;">☕ Buy me a Ko-fi</a>
+  </div>
+
+  <script>
+    // Font & word arrays here...
+    const GOOGLE_FONTS = [
+      "Roboto", "Open Sans", "Lato", "Oswald", "Raleway", "PT Sans",
+      "Nunito", "Poppins", "Ubuntu", "Fira Sans", "Arimo", "Bitter", "Rubik",
+      "Arvo", "Cabin", "Lora", "Exo", "Exo 2", "Karla", "Pacifico", "Muli",
+      "Bangers", "Anton", "Dosis", "Satisfy", "Abel", "Sora", "Radley",
+      "Jost", "Lexend", "Prompt", "Teko", "Tangerine", "Manrope", "Chivo",
+      "Domine", "Eczar", "Maven Pro", "Rokkitt", "Varela", "Vollkorn",
+      "Yeseva One", "Caveat", "Cardo", "Neuton", "Asap", "Alegreya", "Amaranth",
+      "Antic", "Archivo", "Barlow", "Bebas Neue", "Cinzel", "Comfortaa",
+      "Cormorant", "Crimson", "Dancing", "EB Garamond", "Fjalla One", "Gelasio",
+      "Inconsolata", "Josefin", "Karma", "Lobster", "Merriweather", "Noto Sans",
+      "Noto Serif", "Overpass", "Playfair", "Quicksand", "Righteous",
+      "Roboto Mono", "Roboto Slab", "Sanchez", "Source Sans", "Space Mono",
+      "Spectral", "Titillium", "Ubuntu Mono", "Work Sans", "Zilla Slab",
+      "Arbutus", "Cagliostro", "Candal", "Carme", "Chivo", "Coda", "Cousine"
+    ];
+
+    const WORD_LIST = [
+      "apple", "brain", "candy", "dance", "eagle", "frame", "grape", "house",
+      "igloo", "jazzy", "knife", "lemon", "magic", "north", "ocean", "piano",
+      "queen", "river", "stone", "tower", "union", "vivid", "wheat", "xenon",
+      "yacht", "zebra", "anchor", "banana", "circle", "dragon", "energy",
+      "forest", "garden", "hammer", "island", "jungle", "kitten", "ladder",
+      "mirror", "needle", "orange", "planet", "quartz", "rocket", "silver",
+      "tunnel", "unicorn", "violet", "window", "yellow", "zephyr", "artist",
+      "butter", "castle", "desert", "engine", "flower", "guitar", "helmet",
+      "insect", "jacket", "lantern", "market", "napkin", "object", "pencil",
+      "quiver", "rabbit", "saddle", "ticket", "umbrella", "violin", "wallet",
+      "xylophone", "yogurt", "zodiac", "animal", "beacon", "camera", "donkey",
+      "eleven", "fabric", "galaxy", "harbor", "iceberg", "jigsaw", "kernel",
+      "laptop", "magnet", "notary", "octave", "parrot", "quartz", "rescue",
+      "safari", "temple", "urgent", "vacuum", "wander", "xenial", "yonder",
+      "zealot", "acumen", "ballet", "cactus", "dancer", "effect", "fossil",
+      "glider", "humble", "ignite", "jungle", "karate", "legend", "mystic",
+      "nectar", "oracle", "pirate", "quaint", "ranger", "sailor", "talent",
+      "unique", "valley", "wizard", "xenium", "yawner", "zenith", "ambush",
+      "breeze", "candle", "dagger", "embark", "famine", "goblet", "hazard",
+      "injury", "jester", "keeper", "lawyer", "mantle", "nation", "obelix",
+      "pastel", "quiver", "refine", "sacred", "temple", "unfold", "vacant",
+      "wander", "xenial", "yearly", "zealot", "alpine", "bounty", "cradle",
+      "dynamo", "elapse", "fumble", "gadget", "hacker", "impact", "jargon",
+      "kernel", "luster", "magnet", "narrow", "object", "puzzle", "quartz",
+      "ripple", "sprint", "tackle", "unison", "vector", "whimsy", "xenial",
+      "yonder", "zephyr", "anthem", "beacon", "cipher", "doodle", "esteem",
+      "flicker", "glance", "harbor", "ignite", "jigsaw", "kettle", "lounge",
+      "mingle", "nugget", "oracle", "paddle", "quaint", "ranger", "saddle",
+      "tangle", "unveil", "vacuum", "wander", "xenial", "yonder", "zealot"
+    ];
+
+    let questionFonts = [];
+
+    let currentQuestion = 0, score = 0, lives = 3;
+
+    function updateLives() {
+      const heartSVG = `
+        <svg class="heart-icon" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+          <path d="M47.6 300.4L228.3 469.1c7.5 7 17.4 10.9 27.7 10.9s20.2-3.9
+                   27.7-10.9L464.4 300.4c30.4-28.3 47.6-68 47.6-109.5v-5.8c0-69.9
+                   -50.5-129.5-119.4-141C347 36.5 300.6 51.4 268 84L256 96 244 84
+                   c-32.6-32.6-79-47.5-124.6-39.9C50.5 55.6 0 115.2 0 185.1v5.8
+                   c0 41.5 17.2 81.2 47.6 109.5z"/>
+        </svg>`.trim();
+      const n = Math.max(0, lives);
+      document.getElementById('lives').innerHTML = heartSVG.repeat(n);
+    }
+
+    // Preload all 11 result GIFs into cache
+    const resultGifs = Array.from({ length: 11 }, (_, i) => {
+      const idx = String(i).padStart(2, '0');
+      return `https://raw.githubusercontent.com/acydunit/guessthefont/main/Result_${idx}.gif`;
+    });
+    resultGifs.forEach(url => new Image().src = url);
+
+    function shuffle(a){ return a.sort(()=>Math.random() - 0.5); }
+
+    // 1) Add this helper to await actual font download before rendering
+    async function ensureFontLoaded(family) {
+      const linkId = 'font-' + family.replace(/\s+/g, '-');
+      if (!document.getElementById(linkId)) {
+        const link = document.createElement('link');
+        link.id = linkId;
+        link.rel = 'stylesheet';
+        link.href = `https://fonts.googleapis.com/css2?family=${encodeURIComponent(family)}`;
+        document.head.appendChild(link);
+      }
+      await document.fonts.load(`1rem '${family}'`);
+    }
+
+    function showScreen(id){
+      ['entry-screen','game-screen','result-screen'].forEach(s => {
+        document.getElementById(s).classList.toggle('hidden', s !== id);
+      });
+    }
+
+    function updateProgress(){
+      const pct = (currentQuestion / 10) * 100;
+      document.getElementById('progress-bar').style.width = pct + '%';
+      const num = String(currentQuestion + 1).padStart(2, '0');
+      document.getElementById('question-count').textContent = `${num} / 10`;
+    }
+
+    // 2) Modify nextQuestion to await ensureFontLoaded before innerHTML
+    async function nextQuestion(){
+      if (currentQuestion >= 10 || lives <= 0) return showResult();
+      updateProgress();
+      document.getElementById('feedback').textContent = '';
+
+      const word    = WORD_LIST[Math.floor(Math.random() * WORD_LIST.length)];
+      const correct = questionFonts[currentQuestion];
+      const decoys  = shuffle(GOOGLE_FONTS.filter(x => x !== correct)).slice(0, 3);
+      const opts    = shuffle([ correct, ...decoys ]);
+
+      console.log(
+    `Question ${currentQuestion + 1}: word="${word}", correct="${correct}", options=[${opts.join(", ")}]`
+  );
+
+      // Wait until the correct font is fully loaded
+      await ensureFontLoaded(correct);
+
+      document.getElementById('question').innerHTML =
+        `<span style="font-family:'${correct}';">${word}</span>`;
+
+      const container = document.getElementById('options');
+      container.innerHTML = '';
+      opts.forEach(o => {
+        const b = document.createElement('div');
+        b.className   = 'option';
+        b.textContent = o;
+        b.onclick     = () => selectAnswer(b, o === correct, correct);
+        container.appendChild(b);
+      });
+
+      updateLives();
+    }
+
+    function selectAnswer(el, right, correct) {
+      if (right) {
+        score++;
+        el.classList.add('correct');
+      } else {
+        lives--;
+        el.classList.add('wrong');
+        document.querySelectorAll('.option').forEach(o => {
+          if (o.textContent === correct) o.classList.add('correct');
+        });
+      }
+      document.querySelectorAll('.option').forEach(o => o.onclick = null);
+      currentQuestion++;
+      updateLives();
+      setTimeout(nextQuestion, 1500);
+    }
+
+    function showResult() {
+      const idx = String(score).padStart(2, '0');
+      document.getElementById('result-img').src =
+        `https://raw.githubusercontent.com/acydunit/guessthefont/main/Result_${idx}.gif`;
+      document.getElementById('score').textContent = `${score} / 10`;
+      document.getElementById('progress-bar').style.width = '100%';
+      showScreen('result-screen');
+    }
+
+    function startGame(){
+      currentQuestion = 0;
+      score = 0;
+      lives = 3;
+      document.getElementById('progress-bar').style.width = '0%';
+      showScreen('game-screen');
+      const allFontsCopy = GOOGLE_FONTS.slice();
+      questionFonts = shuffle(allFontsCopy).slice(0, 10);
+      nextQuestion();
+    }
+
+    document.getElementById('start-btn').addEventListener('click',startGame);
+    document.getElementById('play-again-btn').addEventListener('click',startGame);
+
+    showScreen('entry-screen');
+  </script>
+</body>
+</html>
